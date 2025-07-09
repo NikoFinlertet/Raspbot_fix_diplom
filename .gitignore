@@ -1,0 +1,45 @@
+.git/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+__pypackages__/
+
+# Environments
+.env
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# SSH keys and certificates
+ssh/
+.ssh/
+
+# Logs
+logs/
+*.log
+
+# Temporary folders
+tmp/
+temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
