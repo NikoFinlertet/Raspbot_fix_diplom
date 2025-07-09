@@ -35,7 +35,7 @@ class Raspbot():
             print(f"Distance Read Error: {e}")
             return 999  # Значение при ошибке
 
-    #写数据
+    #Запись данных
     def write_u8(self, reg, data):
         try:
             self._device.write_byte_data(self._addr, reg, data)
@@ -55,7 +55,7 @@ class Raspbot():
         except:
             print ('write_array I2C error')
 
-   #读数据
+   #Чтение данных
     def read_data_byte(self):
         try:
             buf = self._device.write_byte(self._addr)
@@ -71,7 +71,7 @@ class Raspbot():
             print ('read_u8 I2C error')
 
 
-#控制电机
+#Управление двигателем
     def Ctrl_Car(self, motor_id, motor_dir,motor_speed):
         try:
             if(motor_dir !=1)and(motor_dir != 0):  #参数非法,方向默认前进
@@ -87,7 +87,7 @@ class Raspbot():
         except:
             print ('Ctrl_Car I2C error')
 
-#控制电机正反(-255~255)
+#Управление двигателем с возможностью реверса (-255~255)
     def Ctrl_Muto(self, motor_id, motor_speed):
         try:
 
@@ -104,7 +104,7 @@ class Raspbot():
         except:
             print ('Ctrl_Car I2C error')
 
-#控制舵机
+#Управление серводвигателем
     def Ctrl_Servo(self, id, angle):
         try:
             reg = 0x02
@@ -118,7 +118,7 @@ class Raspbot():
         except:
             print ('Ctrl_Servo I2C error')
 
-#控制灯珠(全部)
+#Управление всеми светодиодами
     def Ctrl_WQ2812_ALL(self, state, color):
         try:
             reg = 0x03
@@ -131,7 +131,7 @@ class Raspbot():
         except:
             print ('Ctrl_WQ2812 I2C error')
 
-#单独控制灯珠
+#Управление отдельным светодиодом
     def Ctrl_WQ2812_Alone(self, number,state, color):
         try:
             reg = 0x04
@@ -144,7 +144,7 @@ class Raspbot():
         except:
             print ('Ctrl_WQ2812_Alone I2C error')
 
-#控制亮度(全部)
+#Управление яркостью всех светодиодов
     def Ctrl_WQ2812_brightness_ALL(self, R, G, B):
         try:
             reg = 0x08
@@ -159,7 +159,7 @@ class Raspbot():
         except:
             print ('Ctrl_WQ2812 I2C error')
 
-#单独灯珠亮度
+#Управление яркостью отдельного светодиода
     def Ctrl_WQ2812_brightness_Alone(self, number, R, G, B):
         try:
             reg = 0x09
@@ -174,7 +174,7 @@ class Raspbot():
         except:
             print ('Ctrl_WQ2812_Alone I2C error')
 
-#控制红外遥控器开关
+#Включение/выключение инфракрасного пульта
     def Ctrl_IR_Switch(self, state):
         try:
             reg = 0x05
@@ -187,7 +187,7 @@ class Raspbot():
         except:
             print ('Ctrl_IR_Switch I2C error')
 
-#控制蜂鸣器开关
+#Включение/выключение зуммера
     def Ctrl_BEEP_Switch(self, state):
         try:
             reg = 0x06
@@ -200,7 +200,7 @@ class Raspbot():
         except:
             print ('Ctrl_BEEP_Switch I2C error')
 
-#控制超声波测距开关
+#Включение/выключение ультразвукового датчика расстояния
     def Ctrl_Ulatist_Switch(self, state):
         try:
             reg = 0x07
@@ -410,7 +410,7 @@ class LightShow:
 # test
 #car = Raspbot()
 
-#读取巡线传感器地址 ,此值只有1位
+#Read line tracking sensor address (this value is 1 byte)
 # track =car.read_data_array(0x0a,1)
 # track = int(track[0])
 # x1 = (track>>3)&0x01
@@ -420,7 +420,7 @@ class LightShow:
 # print(track,x1,x2,x3,x4)
 
 
-# 读取超声传感器地址,此值只有2位
+# Read ultrasonic sensor address (this value is 2 bytes)
 # car.Ctrl_Ulatist_Switch(1)#open
 # time.sleep(1)
 # diss_H =car.read_data_array(0x1b,1)[0]
@@ -429,7 +429,7 @@ class LightShow:
 # print(dis+"mm")
 # car.Ctrl_Ulatist_Switch(0)#close
 
-#读取红外遥控的值
+#Read infrared remote control value
 # car.Ctrl_IR_Switch(1)
 # time.sleep(3)
 # data =car.read_data_array(0x0c,1)
@@ -437,13 +437,13 @@ class LightShow:
 # car.Ctrl_IR_Switch(0)
 
 
-#蜂鸣器测试
+#Buzzer test
 # car.Ctrl_BEEP_Switch(1)
 # time.sleep(1)
 # car.Ctrl_BEEP_Switch(0)
 # time.sleep(1)
 
-#电机测试
+#Motor test
 # car.Ctrl_Car(0,0,150) #L1电机 前进 150速度
 # car.Ctrl_Car(1,0,150) #L2电机 前进 150速度
 # car.Ctrl_Car(2,0,150) #R1电机 前进 150速度
@@ -457,7 +457,7 @@ class LightShow:
 # car.Ctrl_Car(3,0,0) #R2电机 停止
 
 
-#舵机测试
+#Servo motor test
 # car.Ctrl_Servo(1,0) #s1 0度
 # car.Ctrl_Servo(2,180) #s2 180度
 # time.sleep(1)
@@ -465,7 +465,7 @@ class LightShow:
 # car.Ctrl_Servo(2,0) #s2 0度
 # time.sleep(1)
 
-#灯条测试
+#LED strip test
 # car.Ctrl_WQ2812_ALL(1,0)#红色
 # time.sleep(1)
 # car.Ctrl_WQ2812_ALL(1,1)#绿色
@@ -476,7 +476,7 @@ class LightShow:
 # time.sleep(1)
 # car.Ctrl_WQ2812_ALL(0,0) #关闭
 
-#单个灯测试
+#Individual LED test
 # car.Ctrl_WQ2812_Alone(1,1,0)#1号红色
 # time.sleep(1)
 # car.Ctrl_WQ2812_Alone(2,1,3)#1号黄色
@@ -487,9 +487,7 @@ class LightShow:
 # time.sleep(1)
 # car.Ctrl_WQ2812_ALL(0,0) #关闭
 
-#控制亮度测试 全部
+#Brightness control test (all LEDs)
 # for i in range(255):
 #     car.Ctrl_WQ2812_brightness_ALL(i,0,0)
 #     time.sleep(0.01)
-
-
