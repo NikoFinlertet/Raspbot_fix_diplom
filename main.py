@@ -20,7 +20,7 @@ if __name__ == "__main__":
     os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")
 
     #Робот + от камеры бело-круглой данные
-    robot = Robot(tapo_ip="192.168.1.146", tapo_password="qwerty")
+    robot = Robot()
 
     try:
         robot.start()

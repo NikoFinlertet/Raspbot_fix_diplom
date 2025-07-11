@@ -1,3 +1,4 @@
+from config import GESTURE_COOLDOWN, BUFFER_SIZE
 import cv2
 import time
 import logging
@@ -17,10 +18,8 @@ class HandDetector:
         self.lmList = []
         self.gesture = "None"
         self.last_gesture_time = 0
-        self.GESTURE_COOLDOWN = 0.8  # Увеличенный кд между жестами
-        self.GESTURE_HOLD_TIME = 0.5  # Жест должен держаться 0.5 сек
         self.gesture_buffer = []      # Буфер для проверки стабильности жеста
-        self.buffer_size = 5          # Количество кадров для анализа
+
 
     def findHands(self, frame):
         self.lmList = []
@@ -61,7 +60,7 @@ class HandDetector:
         current_time = time.time()
 
         # Проверка кд между жестами
-        if current_time - self.last_gesture_time < self.GESTURE_COOLDOWN:
+        if current_time - self.last_gesture_time < GESTURE_COOLDOWN:
             return "None"
 
         # Распознаем текущий жест
@@ -69,11 +68,11 @@ class HandDetector:
 
         # Добавляем жест в буфер
         self.gesture_buffer.append(current_gesture)
-        if len(self.gesture_buffer) > self.buffer_size:
+        if len(self.gesture_buffer) > BUFFER_SIZE:
             self.gesture_buffer.pop(0)
 
         # Проверяем, что жест стабилен в течение GESTURE_HOLD_TIME
-        if (len(self.gesture_buffer) == self.buffer_size and
+        if (len(self.gesture_buffer) == BUFFER_SIZE and
             all(g == current_gesture for g in self.gesture_buffer) and
             current_gesture != "None"):
 

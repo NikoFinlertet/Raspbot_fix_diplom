@@ -1,3 +1,4 @@
+from config import MOVE_DURATION, TURN_DURATION, MAIN_SPEED, TURN_OFF_SPEED
 import logging
 import threading
 from sdl_robot.Raspbot_Lib import Raspbot
@@ -6,12 +7,6 @@ from sdl_robot.Raspbot_Lib import Raspbot
 class MovementController:
     def __init__(self, bot):
         self.bot = bot
-
-        # Настройки движения
-        self.MOVE_DURATION = 0.35
-        self.TURN_DURATION = 0.15
-        self.MAIN_SPEED = 150
-        self.TURN_OFF_SPEED = 100
 
         # Таймер для автоматической остановки
         self.action_timer = None
@@ -43,8 +38,8 @@ class MovementController:
         """Движение вперед"""
         self._cancel_timer()
         for motor_id in range(4):
-            self._set_motor(motor_id, 0, self.MAIN_SPEED)
-        self.action_timer = threading.Timer(self.MOVE_DURATION, self._emergency_stop)
+            self._set_motor(motor_id, 0, MAIN_SPEED)
+        self.action_timer = threading.Timer(MOVE_DURATION, self._emergency_stop)
         self.action_timer.start()
         logging.info("Движение вперед")
 
@@ -52,8 +47,8 @@ class MovementController:
         """Движение назад"""
         self._cancel_timer()
         for motor_id in range(4):
-            self._set_motor(motor_id, 1, self.MAIN_SPEED)
-        self.action_timer = threading.Timer(self.MOVE_DURATION, self._emergency_stop)
+            self._set_motor(motor_id, 1, MAIN_SPEED)
+        self.action_timer = threading.Timer(MOVE_DURATION, self._emergency_stop)
         self.action_timer.start()
         logging.info("Движение назад")
 
@@ -61,10 +56,10 @@ class MovementController:
         """Поворот налево"""
         self._cancel_timer()
         for m in [0, 1]:
-            self._set_motor(m, 1, self.TURN_OFF_SPEED)
+            self._set_motor(m, 1, TURN_OFF_SPEED)
         for m in [2, 3]:
-            self._set_motor(m, 0, self.MAIN_SPEED)
-        self.action_timer = threading.Timer(self.TURN_DURATION, self._emergency_stop)
+            self._set_motor(m, 0, MAIN_SPEED)
+        self.action_timer = threading.Timer(TURN_DURATION, self._emergency_stop)
         self.action_timer.start()
         logging.info("Поворот налево")
 
@@ -72,10 +67,10 @@ class MovementController:
         """Поворот направо"""
         self._cancel_timer()
         for m in [2, 3]:
-            self._set_motor(m, 1, self.TURN_OFF_SPEED)
+            self._set_motor(m, 1, TURN_OFF_SPEED)
         for m in [0, 1]:
-            self._set_motor(m, 0, self.MAIN_SPEED)
-        self.action_timer = threading.Timer(self.TURN_DURATION, self._emergency_stop)
+            self._set_motor(m, 0, MAIN_SPEED)
+        self.action_timer = threading.Timer(TURN_DURATION, self._emergency_stop)
         self.action_timer.start()
         logging.info("Поворот направо")
 

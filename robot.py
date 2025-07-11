@@ -1,16 +1,17 @@
+from config import TAPO_PASSWORD, TAPO_IP
 import logging
 import queue
 import threading
 import time
 from sdl_robot.Raspbot_Lib import Raspbot
-from movement import MovementController
-from lighting import LightController
-from voice_control import VoiceController
-from gesture_control import GestureController
+from modules.movement import MovementController
+from modules.lighting import LightController
+from modules.voice_control import VoiceController
+from modules.gesture_control import GestureController
 
 
 class Robot:
-    def __init__(self, tapo_ip=None, tapo_password=None):
+    def __init__(self):
         # Инициализация основного контроллера
         self.bot = Raspbot()
         self.running = True
@@ -23,7 +24,7 @@ class Robot:
         self.movement = MovementController(self.bot)
         self.lighting = LightController(self.bot)
         self.voice_control = VoiceController(self.command_queue)
-        self.gesture_control = GestureController(self.command_queue, tapo_ip, tapo_password)
+        self.gesture_control = GestureController(self.command_queue)
 
         # Состояние робота
         self.gripper_state = False

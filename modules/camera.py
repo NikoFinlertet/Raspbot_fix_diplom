@@ -1,16 +1,17 @@
+from config import RTSP_URL
 import cv2
 import logging
 
 
 class TapoCamera:
     def __init__(self, ip, password):
-        self.rtsp_url = f"rtsp://admincam:{password}@{ip}:554/stream1"
+
         self.cap = None
         self.running = True
 
     def start(self):
         try:
-            self.cap = cv2.VideoCapture(self.rtsp_url, cv2.CAP_FFMPEG)
+            self.cap = cv2.VideoCapture(RTSP_URL, cv2.CAP_FFMPEG)
             if not self.cap.isOpened():
                 raise ConnectionError("Не удалось подключиться к камере")
 

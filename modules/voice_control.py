@@ -1,3 +1,4 @@
+from config import SAMPLE_RATE, ALSA_DEVICE
 import os
 import logging
 import json
@@ -11,13 +12,10 @@ class VoiceController:
         self.command_queue = command_queue
         self.running = True
 
-        # Параметры микрофона
-        self.sample_rate = 16000
-        self.alsa_device = "plughw:2,0"
 
         # Инициализация модели Vosk
         self.model = Model("model")
-        self.recognizer = KaldiRecognizer(self.model, self.sample_rate)
+        self.recognizer = KaldiRecognizer(self.model, SAMPLE_RATE)
 
         # Словарь голосовых команд
         self.voice_commands = {
@@ -49,7 +47,7 @@ class VoiceController:
     def _check_microphone(self):
         """Проверка доступности микрофона"""
         try:
-            test_cmd = f"arecord -D {self.alsa_device} -d 1 -f S16_LE /dev/null"
+            test_cmd = f"arecord -D {ALSA_DEVICE} -d 1 -f S16_LE /dev/null"
             return os.system(test_cmd) == 0
         except Exception as e:
             logging.error(f"Ошибка проверки микрофона: {e}")
@@ -69,23 +67,23 @@ class VoiceController:
         while self.running:
             try:
                 # Освобождение аудиоустройства
-                os.system(f"fuser -k {self.alsa_device} >/dev/null 2>&1")
+                os.system(f"fuser -k {ALSA_DEVICE} >/dev/null 2>&1")
                 time.sleep(0.5)
 
                 # Запуск процесса записи
                 process = subprocess.Popen(
                     [
                         "arecord",
-                        "-D", self.alsa_device,
+                        "-D", ALSA_DEVICE,
                         "-c", "1",
-                        "-r", str(self.sample_rate),
+                        "-r", str(SAMPLE_RATE),
                         "-f", "S16_LE",
                         "-t", "raw"
                     ],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )
-                logging.info(f"Запись с микрофона ({self.alsa_device})")
+                logging.info(f"Запись с микрофона ({ALSA_DEVICE})")
 
                 while self.running:
                     data = process.stdout.read(4000)

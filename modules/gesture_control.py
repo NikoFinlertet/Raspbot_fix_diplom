@@ -1,13 +1,14 @@
+from config import TAPO_IP, TAPO_PASSWORD
 import os
 import logging
 import time
 import cv2
-from hand_detector import HandDetector
-from camera import TapoCamera
+from modules.hand_detector import HandDetector
+from modules.camera import TapoCamera
 
 
 class GestureController:
-    def __init__(self, command_queue, tapo_ip=None, tapo_password=None):
+    def __init__(self, command_queue):
         self.command_queue = command_queue
         self.running = True
 
@@ -15,7 +16,7 @@ class GestureController:
         self.hand_detector = HandDetector(detectorCon=0.75)
 
         # Инициализация камеры
-        self.tapo_camera = TapoCamera(tapo_ip, tapo_password) if tapo_ip and tapo_password else None
+        self.tapo_camera = TapoCamera(TAPO_IP, TAPO_PASSWORD) if TAPO_IP and TAPO_PASSWORD else None
         self.local_camera = self._init_local_camera() if not self.tapo_camera else None
 
         # Состояние жестов
