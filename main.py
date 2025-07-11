@@ -7,7 +7,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler('logs/robot.log')
+        logging.FileHandler('logs/main.log')
     ]
 )
 

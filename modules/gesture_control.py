@@ -6,6 +6,14 @@ import cv2
 from modules.hand_detector import HandDetector
 from modules.camera import TapoCamera
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_gesture_control.log')
+    ]
+)
 
 class GestureController:
     def __init__(self, command_queue):

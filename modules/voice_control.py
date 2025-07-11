@@ -6,6 +6,14 @@ import subprocess
 import time
 from vosk import Model, KaldiRecognizer
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_voice_control.log')
+    ]
+)
 
 class VoiceController:
     def __init__(self, command_queue):

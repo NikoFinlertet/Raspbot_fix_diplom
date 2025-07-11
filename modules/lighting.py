@@ -2,6 +2,14 @@ import logging
 import threading
 from sdl_robot.Raspbot_Lib import Raspbot, LightShow
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_lighting.log')
+    ]
+)
 
 class LightController:
     def __init__(self, bot):

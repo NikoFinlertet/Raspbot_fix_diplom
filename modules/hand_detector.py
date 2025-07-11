@@ -4,6 +4,14 @@ import time
 import logging
 import mediapipe as mp
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_hand_detector.log')
+    ]
+)
 
 class HandDetector:
     def __init__(self, mode=False, maxHands=1, detectorCon=0.5, trackCon=0.5):

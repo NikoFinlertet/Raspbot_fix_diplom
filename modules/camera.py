@@ -2,6 +2,14 @@ from config import RTSP_URL
 import cv2
 import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_camera.log')
+    ]
+)
 
 class TapoCamera:
     def __init__(self, ip, password):
