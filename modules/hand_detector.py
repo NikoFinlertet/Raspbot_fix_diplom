@@ -26,7 +26,7 @@ class HandDetector:
         self.lmList = []
         self.gesture = "None"
         self.last_gesture_time = 0
-        self.gesture_buffer = []      # Буфер для проверки стабильности жеста
+        self.gesture_buffer = []      # Буфер для провeрки стабильности жеста
 
 
     def findHands(self, frame):

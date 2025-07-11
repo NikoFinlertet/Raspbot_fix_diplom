@@ -10,7 +10,7 @@ logging.basicConfig(
         logging.FileHandler('logs/module_camera.log')
     ]
 )
-
+#Подключение
 class TapoCamera:
     def __init__(self, ip, password):
 

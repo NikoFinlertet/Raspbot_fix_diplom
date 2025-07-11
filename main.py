@@ -14,7 +14,7 @@ logging.basicConfig(
 if __name__ == "__main__":
     logging.info("Запуск Робота")
 
-    # Освобождаем аудиоустройства
+    # Освобождаем аудиоустройствa
     os.system("sudo fuser -k /dev/snd/* > /dev/null 2>&1")
     os.system("sudo rmmod snd_usb_audio > /dev/null 2>&1")
     os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")

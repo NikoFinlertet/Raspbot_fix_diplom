@@ -20,7 +20,7 @@ logging.basicConfig(
 
 class Robot:
     def __init__(self):
-        # Инициализация основного контроллера
+        # Инициализация основного контроллерa
         self.bot = Raspbot()
         self.running = True
 

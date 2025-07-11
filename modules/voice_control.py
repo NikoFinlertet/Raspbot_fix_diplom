@@ -25,7 +25,7 @@ class VoiceController:
         self.model = Model("model")
         self.recognizer = KaldiRecognizer(self.model, SAMPLE_RATE)
 
-        # Словарь голосовых команд
+        # Словaрь голосовых команд
         self.voice_commands = {
             "вперёд": "move_forward",
             "перед": "move_forward",

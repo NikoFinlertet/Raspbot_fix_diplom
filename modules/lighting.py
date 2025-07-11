@@ -16,7 +16,7 @@ class LightController:
         self.bot = bot
         self.light_show = LightShow()
 
-        # Состояние освещения
+        # Состояние освeщения
         self.current_light = 0
         self.light_state = False
 

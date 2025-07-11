@@ -16,7 +16,7 @@ class MovementController:
     def __init__(self, bot):
         self.bot = bot
 
-        # Таймер для автоматической остановки
+        # Тaймер для автоматической остановки
         self.action_timer = None
 
     def _set_motor(self, motor_id, direction, speed):

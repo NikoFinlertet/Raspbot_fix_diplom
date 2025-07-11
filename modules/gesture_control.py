@@ -20,7 +20,7 @@ class GestureController:
         self.command_queue = command_queue
         self.running = True
 
-        # Инициализация детектора жестов
+        # Инициaлизация детектора жестов
         self.hand_detector = HandDetector(detectorCon=0.75)
 
         # Инициализация камеры
