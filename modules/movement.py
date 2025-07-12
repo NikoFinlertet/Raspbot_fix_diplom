@@ -3,12 +3,20 @@ import logging
 import threading
 from sdl_robot.Raspbot_Lib import Raspbot
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_movement.log')
+    ]
+)
 
 class MovementController:
     def __init__(self, bot):
         self.bot = bot
 
-        # Таймер для автоматической остановки
+        # Тaймер для автоматической остановки
         self.action_timer = None
 
     def _set_motor(self, motor_id, direction, speed):

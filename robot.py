@@ -1,4 +1,3 @@
-from config import TAPO_PASSWORD, TAPO_IP
 import logging
 import queue
 import threading
@@ -9,10 +8,19 @@ from modules.lighting import LightController
 from modules.voice_control import VoiceController
 from modules.gesture_control import GestureController
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/robot.log')
+    ]
+)
+
 
 class Robot:
     def __init__(self):
-        # Инициализация основного контроллера
+        # Инициализация основного контроллерa
         self.bot = Raspbot()
         self.running = True
 

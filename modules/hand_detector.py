@@ -4,6 +4,14 @@ import time
 import logging
 import mediapipe as mp
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/module_hand_detector.log')
+    ]
+)
 
 class HandDetector:
     def __init__(self, mode=False, maxHands=1, detectorCon=0.5, trackCon=0.5):
@@ -18,7 +26,7 @@ class HandDetector:
         self.lmList = []
         self.gesture = "None"
         self.last_gesture_time = 0
-        self.gesture_buffer = []      # Буфер для проверки стабильности жеста
+        self.gesture_buffer = []      # Буфер для провeрки стабильности жеста
 
 
     def findHands(self, frame):
