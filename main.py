@@ -2,6 +2,8 @@ import os
 import logging
 from robot import Robot
 
+from config import *
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -15,12 +17,12 @@ if __name__ == "__main__":
     logging.info("Запуск Робота")
 
     # Освобождаем аудиоустройства
-    os.system("sudo fuser -k /dev/snd/* > /dev/null 2>&1")
-    os.system("sudo rmmod snd_usb_audio > /dev/null 2>&1")
-    os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")
+    # os.system("sudo fuser -k /dev/snd/* > /dev/null 2>&1")
+    # os.system("sudo rmmod snd_usb_audio > /dev/null 2>&1")
+    # os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")
 
     #Робот + от камеры бело-круглой данные
-    robot = Robot(tapo_ip="192.168.1.146", tapo_password="qwerty")
+    robot = Robot(tapo_ip=TAPO_IP, tapo_password=TAPO_PASSWORD)
 
     try:
         robot.start()

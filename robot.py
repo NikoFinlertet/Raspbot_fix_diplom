@@ -2,7 +2,7 @@ import logging
 import queue
 import threading
 import time
-from sdl_robot.Raspbot_Lib import Raspbot
+# from sdl_robot.Raspbot_Lib import Raspbot
 from movement import MovementController
 from lighting import LightController
 from voice_control import VoiceController
@@ -20,9 +20,9 @@ class Robot:
         self.command_lock = threading.Lock()
 
         # Инициализация контроллеров
-        self.movement = MovementController(self.bot)
-        self.lighting = LightController(self.bot)
-        self.voice_control = VoiceController(self.command_queue)
+        # self.movement = MovementController(self.bot)
+        # self.lighting = LightController(self.bot)
+        # self.voice_control = VoiceController(self.command_queue)
         self.gesture_control = GestureController(self.command_queue, tapo_ip, tapo_password)
 
         # Состояние робота
@@ -78,8 +78,8 @@ class Robot:
         devices_ok = True
 
         # Проверка голосового управления
-        if not self.voice_control.start():
-            devices_ok = False
+        # if not self.voice_control.start():
+        #     devices_ok = False
 
         # Проверка управления жестами
         if not self.gesture_control.start():
@@ -94,8 +94,8 @@ class Robot:
             return False
 
         # Запуск потоков
-        audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
-        audio_thread.start()
+        # audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
+        # audio_thread.start()
 
         gesture_thread = threading.Thread(target=self.gesture_control.capture_gestures, daemon=True)
         gesture_thread.start()
@@ -122,7 +122,7 @@ class Robot:
         self.movement.emergency_stop()
 
         # Остановка контроллеров
-        self.voice_control.stop()
+        # self.voice_control.stop()
         self.gesture_control.stop()
 
         logging.info("Робот остановлен")
