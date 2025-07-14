@@ -39,7 +39,7 @@ class Robot:
         self.wrist_angle = 90
 
         # Словарь команд
-        self.command_handlers = {
+        self.command_map = {
             # Движение
             "move_forward": self.movement.move_forward,
             "move_backward": self.movement.move_backward,
@@ -68,12 +68,12 @@ class Robot:
         """Обработчик команд из очереди"""
         while self.running:
             try:
-                command_type, command_data = self.command_queue.get(timeout=1.0)
+                command_type, command_data = self.command_queue.get(timeout=0.5)
 
                 with self.command_lock:
-                    if command_data in self.command_handlers:
+                    if command_data in self.command_map:
                         logging.info(f"Выполняю команду: {command_data}")
-                        self.command_handlers[command_data]()
+                        self.command_map[command_data]()
                     else:
                         logging.warning(f"Неизвестная команда: {command_data}")
 
@@ -88,19 +88,20 @@ class Robot:
 
         # Проверка голосового управления
         if not self.voice_control.start():
+            log.error("Не удалось инициализировать голосовое управление")
             devices_ok = False
 
         # Проверка управления жестами
         if not self.gesture_control.start():
+            log.error("Не удалось инициализировать управление жестами")
             devices_ok = False
 
         return devices_ok
 
     def start(self):
         """Запуск робота"""
-        if not self._check_devices():
-            logging.critical("Не удалось инициализировать устройства!")
-            return False
+        self._check_devices()
+
 
         # Запуск потоков
         audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
@@ -113,7 +114,7 @@ class Robot:
         command_thread.start()
 
         try:
-            logging.info("СИСТЕМА УПРАВЛЕНИЯ РОБОТОМ ЗАПУЩЕНА")
+            logging.info("Робот запущен")
             while self.running:
                 time.sleep(1)
 
@@ -123,8 +124,7 @@ class Robot:
         return True
 
     def _shutdown(self):
-        """Завершение работы системы"""
-        logging.info("Завершение работы робота...")
+        logging.info("Выключение системы робота...")
         self.running = False
 
         # Аварийная остановка
@@ -136,6 +136,7 @@ class Robot:
 
         logging.info("Робот остановлен")
 
+    // WTF?!
     def stop(self):
         """Публичный метод остановки робота"""
         self._shutdown()
