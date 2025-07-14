@@ -78,15 +78,15 @@ class Robot:
 
                 with self.command_lock:
                     if command_data in self.command_handlers:
-                        logging.info(f"Выполняю команду: {command_data}")
+                        logger.info(f"Выполняю команду: {command_data}")
                         self.command_handlers[command_data]()
                     else:
-                        logging.warning(f"Неизвестная команда: {command_data}")
+                        logger.warning(f"Неизвестная команда: {command_data}")
 
             except queue.Empty:
                 continue
             except Exception as e:
-                logging.error(f"Ошибка обработки команды: {e}")
+                logger.error(f"Ошибка обработки команды: {e}")
 
     def _check_devices(self):
         """Проверка доступности устройств"""
@@ -105,7 +105,7 @@ class Robot:
     def start(self):
         """Запуск робота"""
         if not self._check_devices():
-            logging.critical("Не удалось инициализировать устройства!")
+            logger.critical("Не удалось инициализировать устройства!")
             return False
 
         # Запуск потоков
@@ -119,7 +119,7 @@ class Robot:
         command_thread.start()
 
         try:
-            logging.info("СИСТЕМА УПРАВЛЕНИЯ РОБОТОМ ЗАПУЩЕНА")
+            logger.info("СИСТЕМА УПРАВЛЕНИЯ РОБОТОМ ЗАПУЩЕНА")
             while self.running:
                 time.sleep(1)
 
