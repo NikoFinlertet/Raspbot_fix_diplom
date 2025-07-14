@@ -130,7 +130,7 @@ class Robot:
 
     def _shutdown(self):
         """Завершение работы системы"""
-        logging.info("Завершение работы робота...")
+        logger.info("Завершение работы робота...")
         self.running = False
 
         # Аварийная остановка
@@ -140,7 +140,7 @@ class Robot:
         self.voice_control.stop()
         self.gesture_control.stop()
 
-        logging.info("Робот остановлен")
+        logger.info("Робот остановлен")
 
     def stop(self):
         """Публичный метод остановки робота"""
