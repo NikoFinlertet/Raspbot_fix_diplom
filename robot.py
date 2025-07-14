@@ -88,12 +88,12 @@ class Robot:
 
         # Проверка голосового управления
         if not self.voice_control.start():
-            log.error("Не удалось инициализировать голосовое управление")
+            logging.error("Не удалось инициализировать голосовое управление")
             devices_ok = False
 
         # Проверка управления жестами
         if not self.gesture_control.start():
-            log.error("Не удалось инициализировать управление жестами")
+            logging.error("Не удалось инициализировать управление жестами")
             devices_ok = False
 
         return devices_ok

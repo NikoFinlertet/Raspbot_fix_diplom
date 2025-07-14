@@ -1,5 +1,4 @@
 import os
-import logging
 from robot import Robot
 
 if __name__ == "__main__":
@@ -10,7 +9,6 @@ if __name__ == "__main__":
     os.system("sudo rmmod snd_usb_audio > /dev/null 2>&1")
     os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")
 
-    #Робот + от камеры бело-круглой данные
     robot = Robot()
 
     try:
