@@ -16,4 +16,4 @@ if __name__ == "__main__":
     try:
         robot.start()
     except Exception as e:
-        print.(f"Критическая ошибка: {e}")
+        print(f"Критическая ошибка: {e}")
