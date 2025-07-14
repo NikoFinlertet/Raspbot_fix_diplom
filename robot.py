@@ -8,14 +8,20 @@ from modules.lighting import LightController
 from modules.voice_control import VoiceController
 from modules.gesture_control import GestureController
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('logs/robot.log')
-    ]
-)
+logger = logging.getLogger('RobotLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/robot.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 
 class Robot:
