@@ -1,13 +1,9 @@
-.git/
 
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+.ropeproject/  
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -22,10 +18,6 @@ __pypackages__/
 
 # VS Code
 .vscode/
-
-# SSH keys and certificates
-ssh/
-.ssh/
 
 # Logs
 logs/

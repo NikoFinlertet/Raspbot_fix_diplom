@@ -81,7 +81,7 @@ class GestureController:
         elif not self.local_camera:
             return
 
-        logging.info("Распознавание жестов запущено")
+        logging.info("TAPO | Распознавание жестов запущено")
 
         while self.running:
             try:
@@ -118,7 +118,7 @@ class GestureController:
                 return False
             self.tapo_camera.stop()  # Остановим для повторного запуска в capture_gestures
         elif not self.local_camera:
-            logging.error("Камера не найдена!")
+            logging.error("Локальная камера не найдена!")
             return False
 
         logging.info("Управление жестами готово к запуску")
