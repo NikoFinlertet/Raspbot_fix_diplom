@@ -3,14 +3,20 @@ import logging
 import threading
 from sdl_robot.Raspbot_Lib import Raspbot
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('logs/module_movement.log')
-    ]
-)
+logger = logging.getLogger('movementLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/module_movement.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 class MovementController:
     def __init__(self, bot):
@@ -40,7 +46,7 @@ class MovementController:
         self.bot.Ctrl_Servo(2, 0)
         self.bot.Ctrl_Servo(1, 90)
         self.bot.Ctrl_WQ2812_ALL(0, 0)
-        logging.info("АВАРИЙНАЯ ОСТАНОВКА")
+        logger.info("АВАРИЙНАЯ ОСТАНОВКА")
 
     def move_forward(self):
         """Движение вперед"""
@@ -49,7 +55,7 @@ class MovementController:
             self._set_motor(motor_id, 0, MAIN_SPEED)
         self.action_timer = threading.Timer(MOVE_DURATION, self._emergency_stop)
         self.action_timer.start()
-        logging.info("Движение вперед")
+        logger.info("Движение вперед")
 
     def move_backward(self):
         """Движение назад"""
@@ -58,7 +64,7 @@ class MovementController:
             self._set_motor(motor_id, 1, MAIN_SPEED)
         self.action_timer = threading.Timer(MOVE_DURATION, self._emergency_stop)
         self.action_timer.start()
-        logging.info("Движение назад")
+        logger.info("Движение назад")
 
     def turn_left(self):
         """Поворот налево"""
@@ -69,7 +75,7 @@ class MovementController:
             self._set_motor(m, 0, MAIN_SPEED)
         self.action_timer = threading.Timer(TURN_DURATION, self._emergency_stop)
         self.action_timer.start()
-        logging.info("Поворот налево")
+        logger.info("Поворот налево")
 
     def turn_right(self):
         """Поворот направо"""
@@ -80,9 +86,9 @@ class MovementController:
             self._set_motor(m, 0, MAIN_SPEED)
         self.action_timer = threading.Timer(TURN_DURATION, self._emergency_stop)
         self.action_timer.start()
-        logging.info("Поворот направо")
+        logger.info("Поворот направо")
 
     def stop_robot(self):
         """Полная остановка робота"""
         self._emergency_stop()
-        logging.info("ПОЛНАЯ ОСТАНОВКА")
+        logger.info("ПОЛНАЯ ОСТАНОВКА")

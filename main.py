@@ -2,17 +2,23 @@ import os
 import logging
 from robot import Robot
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('logs/main.log')
-    ]
-)
+logger = logging.getLogger('mainLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/main.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 if __name__ == "__main__":
-    logging.info("Запуск Робота")
+    logger.info("Запуск Робота")
 
     # Освобождаем аудиоустройствa
     os.system("sudo fuser -k /dev/snd/* > /dev/null 2>&1")
@@ -25,4 +31,4 @@ if __name__ == "__main__":
     try:
         robot.start()
     except Exception as e:
-        logging.critical(f"Критическая ошибка: {e}")
+        logger.critical(f"Критическая ошибка: {e}")

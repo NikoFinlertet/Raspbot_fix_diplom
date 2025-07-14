@@ -6,14 +6,20 @@ import subprocess
 import time
 from vosk import Model, KaldiRecognizer
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('logs/module_voice_control.log')
-    ]
-)
+logger = logging.getLogger('voice_controlLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/module_voice_control.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 class VoiceController:
     def __init__(self, command_queue):
@@ -58,7 +64,7 @@ class VoiceController:
             test_cmd = f"arecord -D {ALSA_DEVICE} -d 1 -f S16_LE /dev/null"
             return os.system(test_cmd) == 0
         except Exception as e:
-            logging.error(f"Ошибка проверки микрофона: {e}")
+            logger.error(f"Ошибка проверки микрофона: {e}")
             return False
 
     def process_voice_command(self, text):
@@ -66,7 +72,7 @@ class VoiceController:
         text = text.lower()
         for command, action in self.voice_commands.items():
             if command in text:
-                logging.info(f"Выполняю голосовую команду: {command}")
+                logger.info(f"Выполняю голосовую команду: {command}")
                 self.command_queue.put(("voice", action))
                 return
 
@@ -91,14 +97,14 @@ class VoiceController:
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )
-                logging.info(f"Запись с микрофона ({ALSA_DEVICE})")
+                logger.info(f"Запись с микрофона ({ALSA_DEVICE})")
 
                 while self.running:
                     data = process.stdout.read(4000)
                     if not data:
                         error = process.stderr.read()
                         if error:
-                            logging.error(f"Ошибка микрофона: {error.decode().strip()}")
+                            logger.error(f"Ошибка микрофона: {error.decode().strip()}")
                         time.sleep(0.1)
                         continue
 
@@ -107,11 +113,11 @@ class VoiceController:
                         result = json.loads(self.recognizer.Result())
                         text = result.get("text", "").lower()
                         if text:
-                            logging.info(f"Распознано: {text}")
+                            logger.info(f"Распознано: {text}")
                             self.process_voice_command(text)
 
             except Exception as e:
-                logging.error(f"Ошибка записи: {e}")
+                logger.error(f"Ошибка записи: {e}")
                 time.sleep(2)
             finally:
                 if 'process' in locals():
@@ -120,13 +126,13 @@ class VoiceController:
     def start(self):
         """Запуск голосового управления"""
         if not self._check_microphone():
-            logging.error("Микрофон не доступен!")
+            logger.error("Микрофон не доступен!")
             return False
 
-        logging.info("Голосовое управление запущено")
+        logger.info("Голосовое управление запущено")
         return True
 
     def stop(self):
         """Остановка голосового управления"""
         self.running = False
-        logging.info("Голосовое управление остановлено")
+        logger.info("Голосовое управление остановлено")
