@@ -136,7 +136,7 @@ class Robot:
 
         logging.info("Робот остановлен")
 
-    // WTF?!
+    # WTF?!
     def stop(self):
         """Публичный метод остановки робота"""
         self._shutdown()
