@@ -8,14 +8,20 @@ from modules.lighting import LightController
 from modules.voice_control import VoiceController
 from modules.gesture_control import GestureController
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('logs/robot.log')
-    ]
-)
+logger = logging.getLogger('RobotLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/robot.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 
 class Robot:
@@ -71,16 +77,17 @@ class Robot:
                 command_type, command_data = self.command_queue.get(timeout=0.5)
 
                 with self.command_lock:
+
                     if command_data in self.command_map:
                         logging.info(f"Выполняю команду: {command_data}")
                         self.command_map[command_data]()
                     else:
-                        logging.warning(f"Неизвестная команда: {command_data}")
+                        logger.warning(f"Неизвестная команда: {command_data}")
 
             except queue.Empty:
                 continue
             except Exception as e:
-                logging.error(f"Ошибка обработки команды: {e}")
+                logger.error(f"Ошибка обработки команды: {e}")
 
     def _check_devices(self):
         """Проверка доступности устройств"""
@@ -115,6 +122,7 @@ class Robot:
 
         try:
             logging.info("Робот запущен")
+
             while self.running:
                 time.sleep(1)
 
@@ -125,6 +133,7 @@ class Robot:
 
     def _shutdown(self):
         logging.info("Выключение системы робота...")
+
         self.running = False
 
         # Аварийная остановка
@@ -134,7 +143,7 @@ class Robot:
         self.voice_control.stop()
         self.gesture_control.stop()
 
-        logging.info("Робот остановлен")
+        logger.info("Робот остановлен")
 
     # WTF?!
     def stop(self):
