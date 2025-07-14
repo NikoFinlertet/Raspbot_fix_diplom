@@ -79,6 +79,7 @@ class HandDetector:
 
         # Распознаем текущий жест
         current_gesture = self._recognize_gesture()
+        logger.info(f"Распознан жест: {current_gesture}")
 
         # Добавляем жест в буфер
         self.gesture_buffer.append(current_gesture)
