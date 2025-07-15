@@ -2,6 +2,7 @@ import logging
 import queue
 import threading
 import time
+ 
 from sdl_robot.Raspbot_Lib import Raspbot
 from modules.movement import MovementController
 from modules.lighting import LightController
@@ -23,7 +24,6 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
-
 class Robot:
     def __init__(self):
         # Инициализация основного контроллерa
@@ -35,6 +35,7 @@ class Robot:
         self.command_lock = threading.Lock()
 
         # Инициализация контроллеров
+
         self.movement = MovementController(self.bot)
         self.lighting = LightController(self.bot)
         self.voice_control = VoiceController(self.command_queue)
@@ -94,6 +95,7 @@ class Robot:
         devices_ok = True
 
         # Проверка голосового управления
+
         if not self.voice_control.start():
             logger.error("Не удалось инициализировать голосовое управление")
             devices_ok = False
@@ -110,7 +112,7 @@ class Robot:
         self._check_devices()
 
 
-        # Запуск потоков
+        Запуск потоков
         audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
         audio_thread.start()
 
@@ -140,7 +142,7 @@ class Robot:
         self.movement.emergency_stop()
 
         # Остановка контроллеров
-        self.voice_control.stop()
+        # self.voice_control.stop()
         self.gesture_control.stop()
 
         logger.info("Робот остановлен")

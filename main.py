@@ -20,13 +20,14 @@ logger.addHandler(fh)
 if __name__ == "__main__":
     logger.info("Запуск Робота")
 
-    # Освобождаем аудиоустройствa
+    Освобождаем аудиоустройства
     os.system("sudo fuser -k /dev/snd/* > /dev/null 2>&1")
     os.system("sudo rmmod snd_usb_audio > /dev/null 2>&1")
     os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")
 
     #Робот + от камеры бело-круглой данные
-    robot = Robot()
+    robot = Robot(tapo_ip=TAPO_IP, tapo_password=TAPO_PASSWORD)
+
 
     try:
         robot.start()
