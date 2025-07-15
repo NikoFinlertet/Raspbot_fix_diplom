@@ -2,16 +2,31 @@ import logging
 import queue
 import threading
 import time
-# from sdl_robot.Raspbot_Lib import Raspbot
-from movement import MovementController
-from lighting import LightController
-from voice_control import VoiceController
-from gesture_control import GestureController
+ 
+from sdl_robot.Raspbot_Lib import Raspbot
+from modules.movement import MovementController
+from modules.lighting import LightController
+from modules.voice_control import VoiceController
+from modules.gesture_control import GestureController
+
+logger = logging.getLogger('RobotLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/robot.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 
 class Robot:
-    def __init__(self, tapo_ip=None, tapo_password=None):
-        # Инициализация основного контроллера
+    def __init__(self):
+        # Инициализация основного контроллерa
         self.bot = Raspbot()
         self.running = True
 
@@ -20,17 +35,18 @@ class Robot:
         self.command_lock = threading.Lock()
 
         # Инициализация контроллеров
-        # self.movement = MovementController(self.bot)
-        # self.lighting = LightController(self.bot)
-        # self.voice_control = VoiceController(self.command_queue)
-        self.gesture_control = GestureController(self.command_queue, tapo_ip, tapo_password)
+
+        self.movement = MovementController(self.bot)
+        self.lighting = LightController(self.bot)
+        self.voice_control = VoiceController(self.command_queue)
+        self.gesture_control = GestureController(self.command_queue)
 
         # Состояние робота
         self.gripper_state = False
         self.wrist_angle = 90
 
         # Словарь команд
-        self.command_handlers = {
+        self.command_map = {
             # Движение
             "move_forward": self.movement.move_forward,
             "move_backward": self.movement.move_backward,
@@ -59,43 +75,46 @@ class Robot:
         """Обработчик команд из очереди"""
         while self.running:
             try:
-                command_type, command_data = self.command_queue.get(timeout=1.0)
+                command_type, command_data = self.command_queue.get(timeout=0.5)
 
                 with self.command_lock:
-                    if command_data in self.command_handlers:
-                        logging.info(f"Выполняю команду: {command_data}")
-                        self.command_handlers[command_data]()
+
+                    if command_data in self.command_map:
+                        logger.info(f"Выполняю команду: {command_data}")
+                        self.command_map[command_data]()
                     else:
-                        logging.warning(f"Неизвестная команда: {command_data}")
+                        logger.warning(f"Неизвестная команда: {command_data}")
 
             except queue.Empty:
                 continue
             except Exception as e:
-                logging.error(f"Ошибка обработки команды: {e}")
+                logger.error(f"Ошибка обработки команды: {e}")
 
     def _check_devices(self):
         """Проверка доступности устройств"""
         devices_ok = True
 
         # Проверка голосового управления
-        # if not self.voice_control.start():
-        #     devices_ok = False
+
+        if not self.voice_control.start():
+            logger.error("Не удалось инициализировать голосовое управление")
+            devices_ok = False
 
         # Проверка управления жестами
         if not self.gesture_control.start():
+            logger.error("Не удалось инициализировать управление жестами")
             devices_ok = False
 
         return devices_ok
 
     def start(self):
         """Запуск робота"""
-        if not self._check_devices():
-            logging.critical("Не удалось инициализировать устройства!")
-            return False
+        self._check_devices()
 
-        # Запуск потоков
-        # audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
-        # audio_thread.start()
+
+        Запуск потоков
+        audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
+        audio_thread.start()
 
         gesture_thread = threading.Thread(target=self.gesture_control.capture_gestures, daemon=True)
         gesture_thread.start()
@@ -104,7 +123,8 @@ class Robot:
         command_thread.start()
 
         try:
-            logging.info("СИСТЕМА УПРАВЛЕНИЯ РОБОТОМ ЗАПУЩЕНА")
+            logger.info("Робот запущен")
+
             while self.running:
                 time.sleep(1)
 
@@ -114,8 +134,8 @@ class Robot:
         return True
 
     def _shutdown(self):
-        """Завершение работы системы"""
-        logging.info("Завершение работы робота...")
+        logger.info("Выключение системы робота...")
+
         self.running = False
 
         # Аварийная остановка
@@ -125,8 +145,9 @@ class Robot:
         # self.voice_control.stop()
         self.gesture_control.stop()
 
-        logging.info("Робот остановлен")
+        logger.info("Робот остановлен")
 
+    # WTF?!
     def stop(self):
         """Публичный метод остановки робота"""
         self._shutdown()

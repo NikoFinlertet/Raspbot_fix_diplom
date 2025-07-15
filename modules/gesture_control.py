@@ -1,21 +1,36 @@
+from config import TAPO_IP, TAPO_PASSWORD
 import os
 import logging
 import time
 import cv2
-from hand_detector import HandDetector
-from camera import TapoCamera
+from modules.hand_detector import HandDetector
+from modules.camera import TapoCamera
+
+logger = logging.getLogger('Gesture_controlLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/module_gesture_control.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 
 class GestureController:
-    def __init__(self, command_queue, tapo_ip=None, tapo_password=None):
+    def __init__(self, command_queue):
         self.command_queue = command_queue
         self.running = True
 
-        # Инициализация детектора жестов
+        # Инициaлизация детектора жестов
         self.hand_detector = HandDetector(detectorCon=0.75)
 
         # Инициализация камеры
-        self.tapo_camera = TapoCamera(tapo_ip, tapo_password) if tapo_ip and tapo_password else None
+        self.tapo_camera = TapoCamera(TAPO_IP, TAPO_PASSWORD) if TAPO_IP and TAPO_PASSWORD else None
         self.local_camera = self._init_local_camera() if not self.tapo_camera else None
 
         # Состояние жестов
@@ -46,8 +61,8 @@ class GestureController:
                             return camera
                         camera.release()
             except Exception as e:
-                logging.warning(f"Ошибка камеры {device}: {e}")
-        logging.error("Локальная камера не найдена")
+                logger.warning(f"Ошибка камеры {device}: {e}")
+        logger.error("Локальная камера не найдена")
         return None
 
     def process_gesture(self, gesture):
@@ -59,7 +74,7 @@ class GestureController:
             return
 
         if gesture in self.gesture_commands:
-            logging.info(f"Выполняю жест: {gesture}")
+            logger.info(f"Выполняю жест: {gesture}")
             self.command_queue.put(("gesture", self.gesture_commands[gesture]))
             self.last_gesture = gesture
             self.last_gesture_time = current_time
@@ -72,7 +87,7 @@ class GestureController:
         elif not self.local_camera:
             return
 
-        logging.info("Распознавание жестов запущено")
+        logger.info("Распознавание жестов запущено")
 
         while self.running:
             try:
@@ -98,21 +113,21 @@ class GestureController:
                 time.sleep(0.1)
 
             except Exception as e:
-                logging.error(f"Ошибка обработки жестов: {e}")
+                logger.error(f"Ошибка обработки жестов: {e}")
                 time.sleep(1)
 
     def start(self):
         """Запуск управления жестами"""
         if self.tapo_camera:
             if not self.tapo_camera.start():
-                logging.error("Не удалось запустить камеру Tapo!")
+                logger.error("Не удалось запустить камеру Tapo!")
                 return False
             self.tapo_camera.stop()  # Остановим для повторного запуска в capture_gestures
         elif not self.local_camera:
-            logging.error("Камера не найдена!")
+            logger.error("Камера не найдена!")
             return False
 
-        logging.info("Управление жестами готово к запуску")
+        logger.info("Управление жестами готово к запуску")
         return True
 
     def stop(self):
@@ -122,4 +137,4 @@ class GestureController:
             self.tapo_camera.stop()
         elif self.local_camera:
             self.local_camera.release()
-        logging.info("Управление жестами остановлено")
+        logger.info("Управление жестами остановлено")
