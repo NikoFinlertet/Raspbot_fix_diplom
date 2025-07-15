@@ -4,14 +4,20 @@ import time
 import logging
 import mediapipe as mp
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('logs/module_hand_detector.log')
-    ]
-)
+logger = logging.getLogger('hand_detectorLogger')
+logger.setLevel(logging.INFO)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/module_hand_detector.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 class HandDetector:
     def __init__(self, mode=False, maxHands=1, detectorCon=0.5, trackCon=0.5):
@@ -41,7 +47,7 @@ class HandDetector:
                         cx, cy = int(lm.x * w), int(lm.y * h)
                         self.lmList.append([id, cx, cy])
         except Exception as e:
-            logging.error(f"Ошибка распознавания рук: {str(e)}")
+            logger.error(f"Ошибка распознавания рук: {str(e)}")
         return frame
 
     def fingersUp(self):
@@ -73,7 +79,7 @@ class HandDetector:
 
         # Распознаем текущий жест
         current_gesture = self._recognize_gesture()
-        logging.info(f"Распознан жест: {current_gesture}")
+        logger.info(f"Распознан жест: {current_gesture}")
 
         # Добавляем жест в буфер
         self.gesture_buffer.append(current_gesture)
@@ -115,5 +121,5 @@ class HandDetector:
             elif finger_count == 5:
                 return "Five"
         except Exception as e:
-            logging.error(f"Ошибка распознавания жеста: {str(e)}")
+            logger.error(f"Ошибка распознавания жеста: {str(e)}")
         return "Unknown"

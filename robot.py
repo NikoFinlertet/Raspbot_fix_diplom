@@ -79,7 +79,7 @@ class Robot:
                 with self.command_lock:
 
                     if command_data in self.command_map:
-                        logging.info(f"Выполняю команду: {command_data}")
+                        logger.info(f"Выполняю команду: {command_data}")
                         self.command_map[command_data]()
                     else:
                         logger.warning(f"Неизвестная команда: {command_data}")
@@ -95,12 +95,12 @@ class Robot:
 
         # Проверка голосового управления
         if not self.voice_control.start():
-            logging.error("Не удалось инициализировать голосовое управление")
+            logger.error("Не удалось инициализировать голосовое управление")
             devices_ok = False
 
         # Проверка управления жестами
         if not self.gesture_control.start():
-            logging.error("Не удалось инициализировать управление жестами")
+            logger.error("Не удалось инициализировать управление жестами")
             devices_ok = False
 
         return devices_ok
@@ -121,7 +121,7 @@ class Robot:
         command_thread.start()
 
         try:
-            logging.info("Робот запущен")
+            logger.info("Робот запущен")
 
             while self.running:
                 time.sleep(1)
@@ -132,7 +132,7 @@ class Robot:
         return True
 
     def _shutdown(self):
-        logging.info("Выключение системы робота...")
+        logger.info("Выключение системы робота...")
 
         self.running = False
 
