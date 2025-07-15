@@ -2,7 +2,7 @@ import os
 import logging
 from robot import Robot
 
-logger = logging.getLogger('mainLogger')
+logger = logging.getLogger('main_logger')
 logger.setLevel(logging.INFO)
 
 
@@ -20,13 +20,13 @@ logger.addHandler(fh)
 if __name__ == "__main__":
     logger.info("Запуск Робота")
 
-    Освобождаем аудиоустройства
+    #Освобождаем аудиоустройства
     os.system("sudo fuser -k /dev/snd/* > /dev/null 2>&1")
     os.system("sudo rmmod snd_usb_audio > /dev/null 2>&1")
     os.system("sudo modprobe snd_usb_audio > /dev/null 2>&1")
 
     #Робот + от камеры бело-круглой данные
-    robot = Robot(tapo_ip=TAPO_IP, tapo_password=TAPO_PASSWORD)
+    robot = Robot()
 
 
     try:

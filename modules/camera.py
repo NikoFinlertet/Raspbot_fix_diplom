@@ -2,7 +2,7 @@ from config import RTSP_URL
 import cv2
 import logging
 
-logger = logging.getLogger('CameraLogger')
+logger = logging.getLogger('Camera_logger')
 logger.setLevel(logging.INFO)
 
 

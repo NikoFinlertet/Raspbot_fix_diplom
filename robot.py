@@ -9,7 +9,7 @@ from modules.lighting import LightController
 from modules.voice_control import VoiceController
 from modules.gesture_control import GestureController
 
-logger = logging.getLogger('RobotLogger')
+logger = logging.getLogger('robot_logger')
 logger.setLevel(logging.INFO)
 
 

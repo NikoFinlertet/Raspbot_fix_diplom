@@ -2,21 +2,22 @@ import cv2
 import logging
 import time
 import os
-from hand_detector import HandDetector
-from camera import TapoCamera
+from modules.hand_detector import HandDetector
+from modules.camera import TapoCamera
 
-# Создаем папку для логов, если её нет
-os.makedirs('logs', exist_ok=True)
+logger = logging.getLogger('check_camera_logger')
+logger.setLevel(logging.INFO)
 
-# Настройка логирования
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(), 
-        logging.FileHandler('logs/camera_test.log')
-    ]
-)
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+fh = logging.FileHandler('logs/module_check_camera.log')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 class CameraTester:
     def __init__(self, tapo_ip, tapo_password):
@@ -27,20 +28,20 @@ class CameraTester:
         
     def test_camera_connection(self):
         """Проверка подключения к камере"""
-        logging.info("Пытаюсь подключиться к камере...")
+        logger.info("Пытаюсь подключиться к камере...")
         if not self.tapo_camera.start():
-            logging.error("Не удалось подключиться к камере!")
+            logger.error("Не удалось подключиться к камере!")
             return False
         
-        logging.info("Камера подключена. Проверяю поток...")
+        logger.info("Камера подключена. Проверяю поток...")
         for _ in range(5):  # Проверка 5 кадров
             frame = self.tapo_camera.read_frame()
             if frame is None:
-                logging.error("Не удалось получить кадр!")
+                logger.error("Не удалось получить кадр!")
                 self.tapo_camera.stop()
                 return False
             
-            logging.info(f"Кадр получен. Размер: {frame.shape}")
+            logger.info(f"Кадр получен. Размер: {frame.shape}")
             time.sleep(0.5)
         
         self.tapo_camera.stop()
@@ -48,10 +49,10 @@ class CameraTester:
 
     def run_hand_detection_test(self):
         """Непрерывный тест распознавания жестов"""
-        logging.info(f"Запуск теста HandDetector (длительность: {self.test_duration} сек)")
+        logger.info(f"Запуск теста HandDetector (длительность: {self.test_duration} сек)")
         
         if not self.tapo_camera.start():
-            logging.error("Ошибка подключения к камере!")
+            logger.error("Ошибка подключения к камере!")
             return
 
         self.running = True
@@ -63,13 +64,13 @@ class CameraTester:
             while self.running:
                 # Проверка времени теста
                 if self.test_duration > 0 and (time.time() - start_time) > self.test_duration:
-                    logging.info("Тест завершен по времени")
+                    logger.info("Тест завершен по времени")
                     break
 
                 # Получение кадра
                 frame = self.tapo_camera.read_frame()
                 if frame is None:
-                    logging.warning("Пропущен кадр")
+                    logger.warning("Пропущен кадр")
                     continue
 
                 frame_count += 1
@@ -80,7 +81,7 @@ class CameraTester:
                 
                 if gesture != "None":
                     gesture_count += 1
-                    logging.info(f"Обнаружен жест: {gesture}")
+                    logger.info(f"Обнаружен жест: {gesture}")
                     self._process_gesture(gesture)
 
                 # Отображение информации на кадре
@@ -96,7 +97,7 @@ class CameraTester:
                 # Выход по ESC или закрытию окна
                 key = cv2.waitKey(1)
                 if key == 27 or cv2.getWindowProperty("Hand Detection Test", cv2.WND_PROP_VISIBLE) < 1:
-                    logging.info("Тест завершен пользователем")
+                    logger.info("Тест завершен пользователем")
                     break
 
         finally:
@@ -106,9 +107,9 @@ class CameraTester:
             
             # Статистика теста
             duration = time.time() - start_time
-            logging.info(f"Тест завершен. Обработано кадров: {frame_count}")
-            logging.info(f"Средний FPS: {frame_count/duration:.1f}")
-            logging.info(f"Обнаружено жестов: {gesture_count}")
+            logger.info(f"Тест завершен. Обработано кадров: {frame_count}")
+            logger.info(f"Средний FPS: {frame_count/duration:.1f}")
+            logger.info(f"Обнаружено жестов: {gesture_count}")
 
     def _process_gesture(self, gesture):
         """Обработка обнаруженного жеста (можно модифицировать)"""

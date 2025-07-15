@@ -4,7 +4,7 @@ import time
 import logging
 import mediapipe as mp
 
-logger = logging.getLogger('hand_detectorLogger')
+logger = logging.getLogger('hand_detector_logger')
 logger.setLevel(logging.INFO)
 
 
