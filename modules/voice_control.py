@@ -6,7 +6,7 @@ import subprocess
 import time
 from vosk import Model, KaldiRecognizer
 
-logger = logging.getLogger('voice_controlLogger')
+logger = logging.getLogger('voice_control_logger')
 logger.setLevel(logging.INFO)
 
 

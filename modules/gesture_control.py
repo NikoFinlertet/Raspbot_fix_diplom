@@ -6,7 +6,7 @@ import cv2
 from modules.hand_detector import HandDetector
 from modules.camera import TapoCamera
 
-logger = logging.getLogger('Gesture_controlLogger')
+logger = logging.getLogger('Gesture_control_logger')
 logger.setLevel(logging.INFO)
 
 

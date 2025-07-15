@@ -2,7 +2,7 @@ import logging
 import threading
 from sdl_robot.Raspbot_Lib import Raspbot, LightShow
 
-logger = logging.getLogger('lightingLogger')
+logger = logging.getLogger('lighting_logger')
 logger.setLevel(logging.INFO)
 
 

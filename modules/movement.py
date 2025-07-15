@@ -3,7 +3,7 @@ import logging
 import threading
 from sdl_robot.Raspbot_Lib import Raspbot
 
-logger = logging.getLogger('movementLogger')
+logger = logging.getLogger('movement_logger')
 logger.setLevel(logging.INFO)
 
 
