@@ -112,7 +112,7 @@ class Robot:
         self._check_devices()
 
 
-        Запуск потоков
+        #Запуск потоков
         audio_thread = threading.Thread(target=self.voice_control.record_audio, daemon=True)
         audio_thread.start()
 
