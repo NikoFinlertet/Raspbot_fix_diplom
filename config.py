@@ -2,9 +2,9 @@
 CAMERA_TYPE = "none"  # "tapo" или "local"
 # TAPO_IP = "192.168.1.146"
 # TAPO_PASSWORD = "qwerty"
-TAPO_IP = "192.168.1.102"
+TAPO_IP = "192.168.1.145"
 TAPO_PASSWORD = "qwerty"
-RTSP_URL = f"rtsp://admincam:qwerty@192.168.1.102:554/stream1"
+RTSP_URL = f"rtsp://admincam:qwerty@192.168.1.145:554/stream1"
 
 # Настройки аудио
 SAMPLE_RATE = 16000

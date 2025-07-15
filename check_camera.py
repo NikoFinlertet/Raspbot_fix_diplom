@@ -1,6 +1,7 @@
 import cv2
 import logging
 import time
+from config import TAPO_IP, TAPO_PASSWORD
 import os
 from modules.hand_detector import HandDetector
 from modules.camera import TapoCamera
@@ -124,11 +125,8 @@ class CameraTester:
         self.run_hand_detection_test()
 
 if __name__ == "__main__":
-    # Конфигурация теста
-    TAPO_IP = "192.168.1.102"  # Замените на реальный IP
-    TAPO_PASSWORD = "qwerty"    # Замените на ваш пароль
-    TEST_DURATION = 30          # Длительность теста в секундах (0 = бесконечно)
 
+    TEST_DURATION = 30
     tester = CameraTester(TAPO_IP, TAPO_PASSWORD)
     tester.test_duration = TEST_DURATION
     tester.run_tests()
